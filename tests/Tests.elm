@@ -1,7 +1,8 @@
 module Tests exposing (..)
 
-import Test exposing (..)
 import Expect
+import Main exposing (..)
+import Test exposing (..)
 
 
 -- Check out http://package.elm-lang.org/packages/elm-community/elm-test/latest to learn more about testing in Elm!
@@ -10,13 +11,14 @@ import Expect
 all : Test
 all =
     describe "A Test Suite"
-        [ test "Addition" <|
+        [ test "Update light updates the light, duh" <|
             \_ ->
-                Expect.equal 10 (3 + 7)
-        , test "String.left" <|
-            \_ ->
-                Expect.equal "a" (String.left 1 "abcdefg")
-        , test "This test should fail" <|
-            \_ ->
-                Expect.fail "failed as expected!"
+                let
+                    model =
+                        { activeLight = Red }
+
+                    result =
+                        update (UpdateLight Green) model
+                in
+                Expect.equal ( { activeLight = Green }, Cmd.none ) result
         ]
