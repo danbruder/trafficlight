@@ -1,19 +1,26 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, h1, img)
-import Html.Attributes exposing (src)
+import Html exposing (Html, div, h1, img, text)
+import Html.Attributes exposing (class, src)
+import Html.Events exposing (onClick)
 
 
 ---- MODEL ----
 
 
 type alias Model =
-    {}
+    { activeLight : ActiveLight }
+
+
+type ActiveLight
+    = Green
+    | Yellow
+    | Red
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( {}, Cmd.none )
+    ( { activeLight = Green }, Cmd.none )
 
 
 
@@ -22,22 +29,45 @@ init =
 
 type Msg
     = NoOp
+    | UpdateLight ActiveLight
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        UpdateLight light ->
+            ( { model | activeLight = light }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 
 ---- VIEW ----
 
 
+showLight : Model -> Html Msg
+showLight model =
+    case model.activeLight of
+        Red ->
+            img [ src "light1.jpg" ] []
+
+        Yellow ->
+            img [ src "light2.jpg" ] []
+
+        Green ->
+            img [ src "light3.jpg" ] []
+
+
 view : Model -> Html Msg
 view model =
     div []
-        [ img [ src "/logo.svg" ] []
-        , h1 [] [ text "Your Elm App is working!" ]
+        [ showLight model
+        , div [ class "target-wrap" ]
+            [ div [ class "target red", onClick (UpdateLight Red) ] []
+            , div [ class "target yellow", onClick (UpdateLight Yellow) ] []
+            , div [ class "target green", onClick (UpdateLight Green) ] []
+            ]
         ]
 
 
